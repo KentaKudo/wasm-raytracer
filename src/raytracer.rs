@@ -16,7 +16,7 @@ pub fn render() -> Vec<u8> {
                 (255.999 * b) as u8,
             );
 
-            img.extend([ir, ig, ib]);
+            img.extend([ir, ig, ib, 255]);
         }
     }
 
@@ -28,7 +28,7 @@ mod tests {
     #[test]
     fn sample_image() {
         let got = super::render();
-        let want = 256 * 256 * 3;
+        let want = 256 * 256 * 4;
         assert_eq!(got.len(), want)
     }
 }

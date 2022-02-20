@@ -9,7 +9,7 @@ wasm_bindgen_test_configure!(run_in_browser);
 
 #[wasm_bindgen_test]
 pub fn test_render() {
-    let got = wasm_raytracer::render();
-    let want = 256 * 256 * 3;
+    let got = wasm_raytracer::render(256, 256);
+    let want = 256 * 256 * 4;
     assert_eq!(got.length(), want);
 }
