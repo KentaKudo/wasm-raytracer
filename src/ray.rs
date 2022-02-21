@@ -1,5 +1,4 @@
-use crate::hittable::{Hittable, HittableList, Intersection};
-use crate::sphere::Sphere;
+use crate::hittable::Hittable;
 use crate::vec3::{Color, Point3, Vec3};
 
 #[derive(Clone, Copy)]
@@ -25,10 +24,19 @@ impl Ray {
         self.org + t * self.dir
     }
 
-    pub fn color<H: Hittable>(&self, world: &H) -> Color {
+    pub fn color<H: Hittable>(&self, world: &H, depth: u16) -> Color {
+        if depth <= 0 {
+            return Color::default();
+        }
+
         world
-            .hit(self, 0.0, std::f64::INFINITY)
-            .map(|Intersection { normal, .. }| 0.5 * (normal + Color::new(1.0, 1.0, 1.0)))
+            .hit(self, 0.001, std::f64::INFINITY)
+            .map(|i| {
+                i.mat
+                    .scatter(self, i)
+                    .map(|(attenuation, scattered)| attenuation * scattered.color(world, depth - 1))
+                    .unwrap_or(Color::default())
+            })
             .unwrap_or({
                 let unit_dir = self.dir.unit();
                 let t = 0.5 * (unit_dir.y() + 1.0);

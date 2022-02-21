@@ -1,19 +1,25 @@
 use crate::hittable::{Hittable, Intersection};
+use crate::material::Material;
 use crate::ray::Ray;
 use crate::vec3::Point3;
 
-pub struct Sphere {
+pub struct Sphere<M: Material> {
     center: Point3,
     radius: f64,
+    mat: M,
 }
 
-impl Sphere {
-    pub fn new(center: Point3, radius: f64) -> Self {
-        Self { center, radius }
+impl<M: Material> Sphere<M> {
+    pub fn new(center: Point3, radius: f64, mat: M) -> Self {
+        Self {
+            center,
+            radius,
+            mat,
+        }
     }
 }
 
-impl Hittable for Sphere {
+impl<M: Material> Hittable for Sphere<M> {
     fn hit(&self, r: &Ray, t_min: f64, t_max: f64) -> Option<Intersection> {
         let oc = r.origin() - self.center;
         let (a, half_b, c) = (
@@ -44,6 +50,6 @@ impl Hittable for Sphere {
             (-outward_normal, false)
         };
 
-        Some(Intersection::new(p, normal, t, front_face))
+        Some(Intersection::new(p, normal, &self.mat, t, front_face))
     }
 }

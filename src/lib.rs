@@ -1,5 +1,6 @@
 mod camera;
 mod hittable;
+mod material;
 mod ray;
 mod sphere;
 mod universe;
@@ -12,8 +13,9 @@ use wasm_bindgen::prelude::*;
 
 use crate::camera::Camera;
 use crate::hittable::HittableList;
+use crate::material::{Dielectric, Lambertian, Metal};
 use crate::sphere::Sphere;
-use crate::vec3::{Color, Point3};
+use crate::vec3::{Color, Point3, Vec3};
 
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
 // allocator.
@@ -27,14 +29,21 @@ pub fn render(width: u16, height: u16) -> Result<Uint8ClampedArray, JsValue> {
         SmallRng::from_rng(rand::thread_rng()).map_err(|e| JsValue::from(format!("{e}")))?;
 
     // World
-    let mut world = HittableList::new();
-    world.push(Box::new(Sphere::new(Point3::new(0.0, 0.0, -1.0), 0.5)));
-    world.push(Box::new(Sphere::new(Point3::new(0.0, -100.5, -1.0), 100.0)));
+    let world = HittableList::random_scene().map_err(|e| JsValue::from(format!("{e}")))?;
 
     let samples_per_pixel = 100;
+    let max_depth = 50;
 
     // Camera
-    let cam = Camera::new(width as f64 / height as f64);
+    let cam = Camera::new(
+        Point3::new(13.0, 2.0, 3.0),
+        Point3::new(0.0, 0.0, 0.0),
+        Vec3::new(0.0, 1.0, 0.0),
+        20.0,
+        width as f64 / height as f64,
+        0.1,
+        10.0,
+    );
 
     let mut img = vec![];
 
@@ -49,7 +58,7 @@ pub fn render(width: u16, height: u16) -> Result<Uint8ClampedArray, JsValue> {
                         (j as f64 + rng.gen_range(0.0..1.0)) / (height as f64 - 1.0),
                     );
                     let r = cam.ray(u, v);
-                    r.color(&world)
+                    r.color(&world, max_depth)
                 })
                 .fold(Color::default(), |acc, c| acc + c);
 

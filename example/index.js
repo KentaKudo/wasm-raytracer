@@ -1,7 +1,7 @@
 import { render } from "wasm-raytracer";
 
-const WIDTH = 400;
-const HEIGHT = 225;
+const WIDTH = 1200;
+const HEIGHT = 775;
 
 const canvas = document.getElementById("raytracer-canvas");
 canvas.width = WIDTH;

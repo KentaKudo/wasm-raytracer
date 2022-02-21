@@ -1,5 +1,7 @@
 use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub};
 
+use rand::{rngs::SmallRng, Rng, SeedableRng};
+
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Vec3(f64, f64, f64);
 
@@ -23,7 +25,7 @@ impl Vec3 {
         self.2
     }
 
-    fn length(&self) -> f64 {
+    pub fn length(&self) -> f64 {
         self.length_squared().sqrt()
     }
 
@@ -35,16 +37,70 @@ impl Vec3 {
         *self / self.length()
     }
 
+    pub fn near_zero(&self) -> bool {
+        let s = 1e-8;
+        self.0.abs() < s && self.1.abs() < s && self.2.abs() < s
+    }
+
     pub fn dot(&self, rhs: Self) -> f64 {
         self.0 * rhs.0 + self.1 * rhs.1 + self.2 * rhs.2
     }
 
-    fn cross(&self, rhs: Self) -> Self {
+    pub fn cross(&self, rhs: Self) -> Self {
         Self(
             self.1 * rhs.2 - self.2 * rhs.1,
             self.2 * rhs.0 - self.0 * rhs.2,
             self.0 * rhs.1 - self.1 * rhs.0,
         )
+    }
+}
+
+impl Vec3 {
+    pub fn random(min: f64, max: f64) -> Self {
+        let mut rng = match SmallRng::from_rng(rand::thread_rng()) {
+            Ok(rng) => rng,
+            _ => return Self::default(),
+        };
+
+        Self(
+            rng.gen_range(min..max),
+            rng.gen_range(min..max),
+            rng.gen_range(min..max),
+        )
+    }
+
+    pub fn random_in_unit_sphere() -> Self {
+        loop {
+            let p = Self::random(-1.0, 1.0);
+            if p.length_squared() < 1.0 {
+                return p;
+            }
+        }
+    }
+
+    pub fn random_in_unit_disk() -> Self {
+        loop {
+            let mut p = Self::random(-1.0, 1.0);
+            p.2 = 0.0;
+            if p.length_squared() < 1.0 {
+                return p;
+            }
+        }
+    }
+
+    pub fn random_unit_vector() -> Self {
+        Self::random_in_unit_sphere().unit()
+    }
+
+    pub fn reflect(self, n: Self) -> Self {
+        self - 2.0 * self.dot(n) * n
+    }
+
+    pub fn refract(self, n: Self, etai_over_etat: f64) -> Self {
+        let cos_theta = -self.dot(n).min(1.0);
+        let r_out_perp = etai_over_etat * (self + cos_theta * n);
+        let r_out_para = -(1.0 - r_out_perp.length_squared()).abs().sqrt() * n;
+        r_out_perp + r_out_para
     }
 }
 
@@ -83,6 +139,14 @@ impl DivAssign<f64> for Vec3 {
         self.0 /= rhs;
         self.1 /= rhs;
         self.2 /= rhs;
+    }
+}
+
+impl Mul for Vec3 {
+    type Output = Self;
+
+    fn mul(self, rhs: Self) -> Self {
+        Self(self.x() * rhs.x(), self.y() * rhs.y(), self.z() * rhs.z())
     }
 }
 
@@ -129,9 +193,9 @@ impl Sub for Vec3 {
 impl Into<Vec<u8>> for Color {
     fn into(self) -> Vec<u8> {
         let (r, g, b) = (
-            256.0 * self.0.clamp(0.0, 0.999),
-            256.0 * self.1.clamp(0.0, 0.999),
-            256.0 * self.2.clamp(0.0, 0.999),
+            256.0 * self.0.sqrt().clamp(0.0, 0.999),
+            256.0 * self.1.sqrt().clamp(0.0, 0.999),
+            256.0 * self.2.sqrt().clamp(0.0, 0.999),
         );
 
         vec![r as u8, g as u8, b as u8, 255]
