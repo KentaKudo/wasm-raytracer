@@ -13,8 +13,6 @@ use wasm_bindgen::prelude::*;
 
 use crate::camera::Camera;
 use crate::hittable::HittableList;
-use crate::material::{Dielectric, Lambertian, Metal};
-use crate::sphere::Sphere;
 use crate::vec3::{Color, Point3, Vec3};
 
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
