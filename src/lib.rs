@@ -29,7 +29,7 @@ pub fn render(width: u16, height: u16) -> Result<Uint8ClampedArray, JsValue> {
     // World
     let world = HittableList::random_scene().map_err(|e| JsValue::from(format!("{e}")))?;
 
-    let samples_per_pixel = 100;
+    let samples_per_pixel = 10;
     let max_depth = 50;
 
     // Camera
@@ -46,8 +46,6 @@ pub fn render(width: u16, height: u16) -> Result<Uint8ClampedArray, JsValue> {
     let mut img = vec![];
 
     for j in (0..height).rev() {
-        crate::utils::log!("Scanlines remaining: {j}");
-
         for i in 0..width {
             let color = (0..samples_per_pixel)
                 .map(|_| {
@@ -63,8 +61,6 @@ pub fn render(width: u16, height: u16) -> Result<Uint8ClampedArray, JsValue> {
             img.extend::<Vec<u8>>((color / samples_per_pixel as f64).into());
         }
     }
-
-    crate::utils::log!("Done.");
 
     Ok(img[..].into())
 }
