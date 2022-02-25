@@ -27,6 +27,7 @@
   },
   "homepage": "https://github.com/rustwasm/create-wasm-app#readme",
   "dependencies": {
+    "comlink": "^4.3.1",
     "wasm-raytracer": "file:../pkg"
   },
   "devDependencies": {

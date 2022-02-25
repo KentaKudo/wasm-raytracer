@@ -1,5 +1,11 @@
-onmessage = async function (e) {
-  const { render } = await import("wasm-raytracer");
-  const rendered = render(e.data[0], e.data[1]);
-  postMessage(rendered);
+import * as Comlink from "comlink";
+
+const raytracer = {
+  async render(width, height) {
+    const { render } = await import("wasm-raytracer");
+    const rendered = render(width, height);
+    return Comlink.transfer(rendered, [rendered.buffer]);
+  },
 };
+
+Comlink.expose(raytracer);
