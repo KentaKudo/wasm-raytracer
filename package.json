@@ -1,6 +1,9 @@
 {
   "name": "wasm-raytracer",
-  "version": "1.0.1",
+  "version": "1.0.2",
+  "collaborators": [
+    "KentaKudo <yd37574@gmail.com>"
+  ],
   "license": "MIT",
   "scripts": {
     "build": "pnpm run build:browser && pnpm run build:node",
@@ -11,7 +14,7 @@
   },
   "sideEffects": false,
   "files": [
-    "pkg"
+    "pkg/*"
   ],
   "types": "./pkg/browser/wasm_raytracer.d.ts",
   "exports": {
