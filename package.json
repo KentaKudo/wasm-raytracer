@@ -1,6 +1,6 @@
 {
   "name": "wasm-raytracer",
-  "version": "1.0.4",
+  "version": "1.0.3",
   "collaborators": [
     "KentaKudo <yd37574@gmail.com>"
   ],
@@ -14,7 +14,6 @@
   },
   "sideEffects": false,
   "files": [
-    "noop.js",
     "pkg/**"
   ],
   "types": "./pkg/browser/wasm_raytracer.d.ts",
