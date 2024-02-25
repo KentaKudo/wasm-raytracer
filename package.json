@@ -5,9 +5,7 @@
   "scripts": {
     "build": "pnpm run build:browser && pnpm run build:node",
     "build:browser": "wasm-pack build --target web --out-dir ./pkg/browser && rimraf ./pkg/browser/package.json",
-    "build:node": "wasm-pack build --target nodejs --out-dir ./pkg/node && rimraf ./pkg/node/package.json",
-    "build:profiling": "wasm-pack build --profiling",
-    "test": "wasm-pack test --firefox --headless"
+    "build:node": "wasm-pack build --target nodejs --out-dir ./pkg/node && rimraf ./pkg/node/package.json"
   },
   "sideEffects": false,
   "files": [
