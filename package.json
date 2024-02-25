@@ -1,6 +1,6 @@
 {
   "name": "wasm-raytracer",
-  "version": "1.0.3",
+  "version": "1.0.2",
   "collaborators": [
     "KentaKudo <yd37574@gmail.com>"
   ],
@@ -14,7 +14,7 @@
   },
   "sideEffects": false,
   "files": [
-    "pkg/**"
+    "pkg/*"
   ],
   "types": "./pkg/browser/wasm_raytracer.d.ts",
   "exports": {
