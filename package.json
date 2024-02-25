@@ -1,6 +1,6 @@
 {
   "name": "wasm-raytracer",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "license": "MIT",
   "scripts": {
     "build": "pnpm run build:browser && pnpm run build:node",
