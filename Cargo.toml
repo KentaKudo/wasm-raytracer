@@ -1,6 +1,6 @@
 [package]
 name = "wasm-raytracer"
-version = "0.5.2"
+version = "0.5.3"
 authors = ["KentaKudo <yd37574@gmail.com>"]
 edition = "2021"
 
@@ -17,9 +17,9 @@ default = ["console_error_panic_hook"]
 # code size when deploying.
 console_error_panic_hook = { version = "0.1.6", optional = true }
 
-getrandom = { version = "0.2.4", features = [ "js" ] }
+getrandom = { version = "0.2.4", features = ["js"] }
 js-sys = "0.3.56"
-rand = { version = "0.8.5", features = [ "small_rng" ] }
+rand = { version = "0.8.5", features = ["small_rng"] }
 wasm-bindgen = "0.2.63"
 
 # `wee_alloc` is a tiny allocator for wasm that is only ~1K in code size
